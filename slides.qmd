@@ -1,0 +1,20 @@
+---
+title: "PROMPI: a DiRAC RSE success story"
+subtitle: "DiRAC Science Day 2024"
+date: "2024-12-12"
+format:
+  revealjs:
+    embed-resources: true
+    theme: dark
+
+authors:
+ - name: Miren Radia
+   role: Research Software Engineer
+   affiliations:
+     - name: University of Cambridge
+
+---
+## The team
+
+
+## PROMPI
