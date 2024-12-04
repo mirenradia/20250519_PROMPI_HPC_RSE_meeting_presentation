@@ -1,4 +1,4 @@
-# PROMPI: an RSE success story
+# PROMPI: a DiRAC RSE success story
 
 This repository contains the code to generate the slides for the presentation
 about PROMPI delivered by Miren Radia at the [2024 DiRAC Science
