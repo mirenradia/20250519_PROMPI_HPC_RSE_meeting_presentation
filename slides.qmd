@@ -2,10 +2,10 @@
 title: "PROMPI: a DiRAC RSE success story"
 subtitle: "DiRAC Science Day 2024"
 date: "2024-12-12"
+date-format: "dddd DD MMMM YYYY"
 format:
-  revealjs:
+  clean-revealjs:
     embed-resources: true
-    theme: dark
 
 authors:
  - name: Miren Radia
