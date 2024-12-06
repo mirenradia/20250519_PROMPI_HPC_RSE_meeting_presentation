@@ -138,11 +138,14 @@ Previously the code used:
 * Nvidia managed memory extension to OpenACC:
   * The runtime automatically migrates data between host (CPU) and device
     (GPU) as required.
-* MPI Derived Datatypes:
+* MPI derived datatypes:
   * `MPI_Type_vector` to simplify halo/ghost cell exchange since this data is
-     non-contiguous in memory, albeit regularly spaced.
-* Effectively blocking MPI calls
-  * `MPI_Wait` was called after every `MPI_Irecv`.
+     non-contiguous in memory, albeit regularly spaced:
+  ![Non-contiguous memory layout in an
+    `MPI_Type_vector`](media/mpi_type_vector_memory_layout.svg)
+* Effectively blocking MPI calls:
+  * The ghosts for each variable were all sent in separate `MPI_Isend`s.
+  * However, `MPI_Wait` was called after every `MPI_Irecv`.
 
 This combination meant lots of small host-device data migrations → bad for
 performance:
@@ -150,13 +153,71 @@ performance:
 * For a $512^3$ test simulation running on 8 Tursa Nvidia A100s (2 nodes), > 90%
   of the walltime was spent in communication.
 
+## The solution[^1] {.smaller}
+### How was it sped up?
 
-## The solution
+I significantly refactored the communication in the following ways:
+
+* Manual packing and unpacking of data:
+  * No more `MPI_Type_vector`.
+  * Single send/receive buffer for each pair of communicating processes.
+    (data from all variables).
+  * Uses asynchronous OpenACC kernels to [un]pack data on the GPU.
+* Forced use of GPU-aware MPI:
+  ```{.fortran}
+  !$acc host_data use_device(send_buf)
+  call mpi_isend(send_buf, ...)
+  ```
+* `MPI_Waitall` after all sends and receives for each direction.
+
+After these changes with our $512^3$ test case on 8 Tursa Nvidia A100s:
+
+* ~200x speed-up in communication leading to ~20x overall speed-up.
+* < 10% of the walltime spent in communication.
+
+[^1]: I would like to acknowledge Filippo Spiga (Nvidia) for his help with this work.
 
 # Benefits {background-color="#40666e"}
 
-## Scaling
+## Scaling {.smaller}
+### How does PROMPI perform after these improvements?
 
-## Other benefits
+:::: {.columns}
 
-# Any questions?
+::: {.column width=35%}
+#### Weak scaling on Tursa
+* Excellent weak scaling of 88% efficiency up to 128 GPUs.
+* Most relevant scaling for group given typical research workflows.
+![](media/weak_scaling.png)
+:::
+
+::: {.column width=30%}
+#### Strong scaling on Tursa and COSMA8
+* Good strong scaling (>50% efficiency) up to around 32 Tursa Nvidia A100 80GB GPUs.
+* Efficiency drops for greater numbers due to GPU underutilization.
+* Grey line shows roughly how many COSMA8 (Milan) nodes are equivalent to 1 Tursa GPU.
+:::
+
+::: {.column width=35%}
+![](media/strong_scaling.png)
+:::
+
+::::
+
+## Other benefits {.smaller}
+### What else has been achieved as a result of this project?
+
+Performance and scaling improvements were not the only outcomes of this project.
+Other benefits include:
+
+* Sustainability and maintainability improvements from:
+  * Better CI infrastructure.
+  * Additional tests and increased robustness.
+* HPC system support from:
+  * Improvements to CMake including support for newer compilers.
+  * Software dependencies built on Tursa and local HPC.
+* Capabilities:
+  * Better reproducibility from HDF5 checkpoint improvements.
+  * More useful and accurate visualizations from plotting script improvements.
+
+# Any questions? {background-color="#40666e"}
