@@ -6,6 +6,7 @@ date-format: "dddd DD MMMM YYYY"
 format:
   clean-revealjs:
     embed-resources: true
+    logo: media/dirac_logo.png
 
 authors:
  - name: Miren Radia
