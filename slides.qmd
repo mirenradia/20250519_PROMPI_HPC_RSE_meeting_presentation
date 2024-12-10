@@ -93,6 +93,7 @@ shell](media/vmag_vhrez.mp4)
 Over several DiRAC RSE projects, the code has been enhanced and modernized in
 several different ways:
 
+::: {.incremental}
 * Acceleration on Nvidia GPUs using OpenACC
 * Fortran 77 → Modern free-form Fortran
 * Object-oriented design (Fortran 2003)
@@ -100,6 +101,7 @@ several different ways:
 * Custom Makefile build system → CMake
 * Custom binary I/O format → HDF5
 * Regression tests and GitLab CI pipeline to run them
+:::
 
 # This project {background-color="#40666e"}
 
@@ -109,30 +111,35 @@ several different ways:
 Despite the enhancements, there was still work that needed to be done before the
 group felt they could switch over:
 
+::: {.incremental}
 1. Consistency between the results on GPU and CPU.
 1. Optimal performance on the DiRAC systems the group uses (COSMA8 and Tursa).
 1. Porting and testing of physics modules and initial conditions to simulate
    specific scenarios from the old version of the code.
 1. Poor scaling on GPUs beyond a single GPU.
+:::
 
 ## Work summary
 ### What improvements were made to the code?
 
 During the project, changes I made include:
 
+::: {.incremental}
 * Improvements and updates to the CMake build system.
 * Dependency software stack creation on Tursa and greenHPC (Keele local system).
 * Refactoring, updating and adding to the test and CI frameworks.
 * Fixing and refactoring the analysis/plotting Python scripts.
-* [Significant refactoring of the MPI communication.]{.alert}
+* [Significant refactoring of the MPI communication.]{.fragment .highlight-red}
 * Fixing the HDF5 checkpoint and restart consistency.
-* [Benchmarking and scaling analysis.]{.alert}
+* [Benchmarking and scaling analysis.]{.fragment .highlight-red}
+:::
 
 # Improving MPI communication {background-color="#40666e"}
 
 ## The problem {.smaller}
 ### What was causing such poor performance on GPUs?
 
+::: {.fragment}
 Previously the code used:
 
 * Nvidia managed memory extension to OpenACC:
@@ -142,20 +149,24 @@ Previously the code used:
   * `MPI_Type_vector` to simplify halo/ghost cell exchange since this data is
      non-contiguous in memory, albeit regularly spaced:
   ![Non-contiguous memory layout in an
-    `MPI_Type_vector`](media/mpi_type_vector_memory_layout.svg)
+      `MPI_Type_vector`](media/mpi_type_vector_memory_layout.svg)
 * Effectively blocking MPI calls:
   * The ghosts for each variable were all sent in separate `MPI_Isend`s.
   * However, `MPI_Wait` was called after every `MPI_Irecv`.
+:::
 
+::: {.fragment}
 This combination meant lots of small host-device data migrations → bad for
 performance:
 
 * For a $512^3$ test simulation running on 8 Tursa Nvidia A100s (2 nodes), > 90%
   of the walltime was spent in communication.
+:::
 
 ## The solution[^1] {.smaller}
 ### How was it sped up?
 
+::: {.fragment}
 I significantly refactored the communication in the following ways:
 
 * Manual packing and unpacking of data:
@@ -169,11 +180,14 @@ I significantly refactored the communication in the following ways:
   call mpi_isend(send_buf, ...)
   ```
 * `MPI_Waitall` after all sends and receives for each direction.
+:::
 
+::: {.fragment}
 After these changes with our $512^3$ test case on 8 Tursa Nvidia A100s:
 
 * ~200x speed-up in communication leading to ~20x overall speed-up.
 * < 10% of the walltime spent in communication.
+:::
 
 [^1]: I would like to acknowledge Filippo Spiga (Nvidia) for his help with this work.
 
@@ -210,14 +224,20 @@ After these changes with our $512^3$ test case on 8 Tursa Nvidia A100s:
 Performance and scaling improvements were not the only outcomes of this project.
 Other benefits include:
 
+::: {.fragment}
 * Sustainability and maintainability improvements from:
   * Better CI infrastructure.
   * Additional tests and increased robustness.
+:::
+::: {.fragment}
 * HPC system support from:
   * Improvements to CMake including support for newer compilers.
   * Software dependencies built on Tursa and local HPC.
+:::
+::: {.fragment}
 * Capabilities:
   * Better reproducibility from HDF5 checkpoint improvements.
   * More useful and accurate visualizations from plotting script improvements.
+:::
 
 # Any questions? {background-color="#40666e"}
