@@ -1,8 +1,13 @@
-# PROMPI: a DiRAC RSE success story
+# Scaling the Stars
+## Optimizing MPI communication on GPUs in the PROMPI stellar dynamics code
 
 This repository contains the code to generate the slides for the presentation
-about PROMPI delivered by Miren Radia at the [2024 DiRAC Science
-Day](https://dirac.ac.uk/dirac-day-2024/) on Thu 12 Dec 2024.
+about PROMPI delivered by Miren Radia at the [HPC RSE SIG
+meeting](https://socrse.github.io/hpc-rse-sig/) on Mon 19 May 2025. This
+presentation is based on [one I previously
+gave](https://github.com/mirenradia/20241212_PROMPI_DiRAC_Day_presentation) at
+the [DiRAC Science Day 2024](https://dirac.ac.uk/dirac-science-day-2024/) on Thu
+12 Dec 2024.
 
 ## Quarto
 
@@ -24,7 +29,7 @@ It should generate a `slides.html` file which you can open with a web browser.
 
 If you are looking at this repository on GitHub, the slides are deployed to
 [this GitHub Pages
-site](https://mirenradia.github.io/20241212_PROMPI_DiRAC_Day_presentation/).
+site](https://mirenradia.github.io/20250519_PROMPI_HPC_RSE_meeting_presentation).
 
 ## License
 
