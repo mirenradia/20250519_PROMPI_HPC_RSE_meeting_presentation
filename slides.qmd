@@ -238,26 +238,4 @@ After these changes with our test case:
 
 ::::
 
-## Other benefits {.smaller}
-### What else has been achieved as a result of this project?
-
-Performance and scaling improvements were not the only outcomes of this project.
-Other benefits include:
-
-::: {.fragment}
-* Sustainability and maintainability improvements from:
-  * Better CI infrastructure.
-  * Additional tests and increased robustness.
-:::
-::: {.fragment}
-* HPC system support from:
-  * Improvements to CMake including support for newer compilers.
-  * Software dependencies built on Tursa and local HPC.
-:::
-::: {.fragment}
-* Capabilities:
-  * Better reproducibility from HDF5 checkpoint improvements.
-  * More useful and accurate visualizations from plotting script improvements.
-:::
-
 # Any questions? {background-color="#40666e"}
