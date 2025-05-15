@@ -125,37 +125,6 @@ several different ways:
 * Regression tests and GitLab CI pipeline to run them
 :::
 
-# This project {background-color="#40666e"}
-
-## Aims
-### What still needed to be done for the new code to be research-ready?
-
-Despite the enhancements, there was still work that needed to be done before the
-group felt they could switch over:
-
-::: {.incremental}
-1. Consistency between the results on GPU and CPU.
-1. Optimal performance on the DiRAC systems the group uses (COSMA8 and Tursa).
-1. Porting and testing of physics modules and initial conditions to simulate
-   specific scenarios from the old version of the code.
-1. Poor scaling on GPUs beyond a single GPU.
-:::
-
-## Work summary
-### What improvements were made to the code?
-
-During the project, changes I made include:
-
-::: {.incremental}
-* Improvements and updates to the CMake build system.
-* Dependency software stack creation on Tursa and greenHPC (Keele local system).
-* Refactoring, updating and adding to the test and CI frameworks.
-* Fixing and refactoring the analysis/plotting Python scripts.
-* [Significant refactoring of the MPI communication.]{.fragment .highlight-red}
-* Fixing the HDF5 checkpoint and restart consistency.
-* [Benchmarking and scaling analysis.]{.fragment .highlight-red}
-:::
-
 # Improving MPI communication {background-color="#40666e"}
 
 ## The problem {.smaller}
