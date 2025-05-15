@@ -127,31 +127,46 @@ several different ways:
 
 # Improving MPI communication {background-color="#40666e"}
 
-## The problem {.smaller}
-### What was causing such poor performance on GPUs?
+## Starting place {.smaller}
+### How was communication handled previously?
 
-::: {.fragment}
 Previously the code used:
 
+::: {.incremental}
 * Nvidia managed memory extension to OpenACC:
-  * The runtime automatically migrates data between host (CPU) and device
-    (GPU) as required.
+  * When data access is attempted on the host (CPU)/device (GPU) but the data
+    resides on the device/host, a page fault triggers the runtime to migrate the
+    data across.
 * MPI derived datatypes:
-  * `MPI_Type_vector` to simplify halo/ghost cell exchange since this data is
-     non-contiguous in memory, albeit regularly spaced:
+  * Data arrays have halo regions/ghost cells to allow calculating derivatives.
+  * In each direction, these are non-contiguous in memory but regularly spaced.
+  * `MPI_Type_vector` is designed to handle this type of memory layout:
   ![Non-contiguous memory layout in an
       `MPI_Type_vector`](media/mpi_type_vector_memory_layout.svg)
 * Effectively blocking MPI calls:
-  * The ghosts for each variable were all sent in separate `MPI_Isend`s.
+  * The data for each variable is stored in separate arrays.
+  * The ghost data for each array was sent in separate `MPI_Isend`s.
   * However, `MPI_Wait` was called after every `MPI_Irecv`.
 :::
 
-::: {.fragment}
-This combination meant lots of small host-device data migrations → bad for
-performance:
+## The problem {.smaller}
+### How did this configuration lead to poor performance on multiple GPUs?
 
-* For a $512^3$ test simulation running on 8 Tursa Nvidia A100s (2 nodes), > 90%
-  of the walltime was spent in communication.
+::: {.incremental}
+* Because of managed memory, each contiguous chunk of the
+  `MPI_Type_vector` was separately migrated from device to host memory.
+* These were then communicated using MPI from the host memory on 1 rank to
+  another.
+* The effectively blocking MPI calls meant these transfers were likely performed
+  one-by-one.
+* Lots of small host-device transfers (visible in Nvidia Nsight Systems and
+  Linaro Forge profiling) → poor performance.
+* For a $512^3$ test simulation running on 8 Tursa Nvidia A100s (2 nodes),
+  basic timer profiling showed that > 90% of the walltime was spent in communication.
+:::
+
+::: {style="text-align:center;"}
+![](media/comms-before.svg){.fragment height=150}
 :::
 
 ## The solution[^1] {.smaller}
