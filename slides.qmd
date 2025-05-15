@@ -32,34 +32,47 @@ authors:
 
 :::: {.columns}
 
-::: {.column width="30%"}
-![](media/raphael.jpg){width="80%"}
-
-**Raphael Hirschi**</br>
+::: {.column width="21.25%"}
+![**Raphael Hirschi**</br>
 [Professor of Stellar Hydrodynamics and Nuclear Astrophysics]{.alert}</br>
-*Keele University*
+*Keele University*](media/raphael.jpg){width="100%"}
 :::
 
 ::: {.column width="5%"}
 :::
 
-::: {.column width="30%"}
-![](media/vishnu.jpg){width="80%"}
-
-**Vishnu Varma**</br>
+::: {.column width="21.25%"}
+![**Vishnu Varma**</br>
 [Research Associate In Theoretical Stellar Astrophysics]{.alert}</br>
-*Keele University*
+*Keele University*](media/vishnu.jpg){width="100%"}
 :::
 
 ::: {.column width="5%"}
 :::
 
-::: {.column width="30%"}
-![](media/miren.jpg){width="80%"}
+::: {.column width="21.25%"}
+![**Kate Goodman**</br>
+[PhD Student]{.alert}</br>
+*Keele University*](media/kate.jpg){width="100%"}
+:::
 
-**Miren Radia**</br>
+::: {.column width="5%"}
+:::
+
+::: {.column width="21.25%"}
+::: {.r-stack}
+::: {.fragment .fade-out fragment-index=1}
+![**Miren Radia**</br>
 [Research Software Engineer]{.alert}</br>
-*University of Cambridge*
+*University of Cambridge*](media/miren.jpg){width="100%"}
+:::
+
+::: {.fragment .fade-in fragment-index=1}
+![**Simon Clifford**</br>
+[Research Software Engineer]{.alert}</br>
+*University of Cambridge*](media/simon.jpg){width="100%"}
+:::
+:::
 :::
 
 ::::
@@ -67,7 +80,6 @@ authors:
 #### Others
 
 * Federico Rizzuti, former PhD Student, *Keele University*
-* Caitlyn Chambers, new PhD student, *Keele University*
 
 ## PROMPI {.smaller}
 ### What does the code do?
