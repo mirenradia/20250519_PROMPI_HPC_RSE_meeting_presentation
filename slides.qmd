@@ -120,8 +120,8 @@ several different ways:
 * Fortran 77 → Modern free-form Fortran
 * Object-oriented design (Fortran 2003)
 * Legacy include statements and common blocks → Modules
-* Custom Makefile build system → CMake
-* Custom binary I/O format → HDF5
+* Non-standard Makefile build system → CMake
+* Non-standard binary I/O format → HDF5
 * Regression tests and GitLab CI pipeline to run them
 :::
 
