@@ -95,11 +95,10 @@ authors:
   * Piecewise Parabolic Method (PPM) hydrodynamics scheme
 * Physics:
   * Fully compressible fluids
-  * Nuclear burning
-  * Convection/turbulence
+  * Nuclear burning/convection/turbulence
 * Code:
   * Fortran
-  * Parallelised with domain decomposition distributed with MPI
+  * Domain decomposed and distributed with MPI
 :::
 
 ::: {.column width="50%"}
