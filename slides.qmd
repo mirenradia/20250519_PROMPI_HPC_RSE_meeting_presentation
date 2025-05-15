@@ -170,37 +170,51 @@ Previously the code used:
 :::
 
 ## The solution[^1] {.smaller}
-### How was it sped up?
+### How were the communications optimised?
 
-::: {.fragment}
 I significantly refactored the communication in the following ways:
 
+::: {.incremental}
 * Manual packing and unpacking of data:
-  * No more `MPI_Type_vector`.
   * Single send/receive buffer for each pair of communicating processes.
-    (data from all variables).
-  * Uses asynchronous OpenACC kernels to [un]pack data on the GPU.
+  * Asynchronous OpenACC kernels to [un]pack data from/to ghosts cells from all variables into the single buffer on the GPU.
+  * No more `MPI_Type_vector`.
 * Forced use of GPU-aware MPI:
   ```{.fortran}
   !$acc host_data use_device(send_buf)
   call mpi_isend(send_buf, ...)
   ```
-* `MPI_Waitall` after all sends and receives for each direction.
+* `MPI_Waitall` after all sends and receives for each direction (truly
+  asynchronous).
 :::
 
+## Results {.smaller}
+### How much better is the performance following these changes?
+
 ::: {.fragment}
-After these changes with our $512^3$ test case on 8 Tursa Nvidia A100s:
+After these changes with our test case:
 
 * ~200x speed-up in communication leading to ~20x overall speed-up.
 * < 10% of the walltime spent in communication.
+
 :::
+:::: {.columns}
+
+::: {.column width=50%}
+![](media/comms-after.svg){.fragment width=100%}
+:::
+
+::: {.column width=50%}
+![](media/performance_improvement.svg){.fragment width=100%}
+:::
+
+::::
+
 
 [^1]: I would like to acknowledge Filippo Spiga (Nvidia) for his help with this work.
 
-# Benefits {background-color="#40666e"}
-
 ## Scaling {.smaller}
-### How does PROMPI perform after these improvements?
+### How does PROMPI scale after these improvements?
 
 :::: {.columns}
 
